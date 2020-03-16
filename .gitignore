@@ -2,6 +2,8 @@ model
 dataset
 
 .ipynb_checkpoints
+.pt
+.pth
 
 MANIFEST
 build
