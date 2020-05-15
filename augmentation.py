@@ -2,7 +2,7 @@ from albumentations import (
     HorizontalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
     Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue,
     IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, IAAPiecewiseAffine,
-    IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Resize, CenterCrop, RandomCrop
+    IAASharpen, IAAEmboss, RandomBrightnessContrast, VerticalFlip, HorizontalFlip, OneOf, Compose, Normalize, Resize, CenterCrop, RandomCrop
 )
 import numpy as np
 
@@ -10,33 +10,32 @@ import cv2
 cv2.setNumThreads(0)
 cv2.ocl.setUseOpenCL(False)
 
-
 from albumentations.pytorch import ToTensor
 
 def get_train_transforms():
     augmentations = Compose([
         Resize(236,236),
-        Flip(),
+        HorizontalFlip(),
         OneOf([
             IAAAdditiveGaussianNoise(p=.5),
             GaussNoise(p=.4),
-        ], p=0.4),
+        ], p=0.6),
         OneOf([
             MotionBlur(p=0.6),
             Blur(blur_limit=3, p=0.2),
-        ], p=0.4),
+        ], p=0.6),
         ShiftScaleRotate(shift_limit=0.0725, scale_limit=0.2, rotate_limit=45, p=0.6),
         OneOf([
             OpticalDistortion(p=0.3),
             GridDistortion(p=0.4),
             IAAPiecewiseAffine(p=0.2),
-        ], p=0.3),
+        ], p=0.6),
         OneOf([
             CLAHE(clip_limit=2),
             IAASharpen(),
             IAAEmboss(),
             RandomBrightnessContrast(),
-        ], p=0.25),
+        ], p=0.45),
         HueSaturationValue(p=0.3),
         CenterCrop(224,224),
         Normalize(
